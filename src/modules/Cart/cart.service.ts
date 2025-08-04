@@ -50,10 +50,35 @@ export class CartService {
     if (!productExists) {
       throw new BadRequestException('Product does not exist');
     }
+    if (productExists.stockQuantity < quantity) {
+      throw new BadRequestException('Insufficient stock for product');
+    }
     return this.cartItemRepository.save({
       cart,
       productId,
       quantity,
     });
+  }
+
+  async updateCartItem(
+    userId: string,
+    productId: string,
+    quantity: number,
+  ): Promise<CartItem> {
+    const cart = await this.getUserCart(userId);
+    if (!cart) {
+      throw new BadRequestException('Cart not found for user');
+    }
+    const existingItem = cart.cartItems.find(
+      (item) => item.productId === productId,
+    );
+    if (!existingItem) {
+      throw new BadRequestException('Item does not exist in the cart');
+    }
+    if (quantity > existingItem.product.stockQuantity) {
+      throw new BadRequestException('Insufficient stock for product');
+    }
+    existingItem.quantity = quantity;
+    return this.cartItemRepository.save(existingItem);
   }
 }

@@ -1,7 +1,16 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CartService } from './cart.service';
 import { UserId } from '../../common/decorators/user-id.decorator';
 import { AddItemDto } from './dto/add-item.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
 
 @Controller('cart')
 export class CartController {
@@ -21,6 +30,19 @@ export class CartController {
       userId,
       addItemDto.productId,
       addItemDto.quantity,
+    );
+  }
+
+  @Patch('/items/:productId')
+  async updateCartItem(
+    @UserId() userId: string,
+    @Param('productId', new ParseUUIDPipe()) productId: string,
+    @Body() updateItemDto: UpdateItemDto,
+  ) {
+    return await this.cartService.updateCartItem(
+      userId,
+      productId,
+      updateItemDto.quantity,
     );
   }
 }
