@@ -2,7 +2,6 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { UserService } from '../User/user.service';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
@@ -64,7 +63,10 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Incorrect Username or password');
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await this.userService.comparePassword(
+      user.id,
+      password,
+    );
     if (!isPasswordValid) {
       throw new BadRequestException('Incorrect Username or password');
     }
