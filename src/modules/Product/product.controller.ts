@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
@@ -19,6 +21,18 @@ export class ProductController {
   @Get()
   async findAll() {
     return this.productService.findAll({ relations: ['category'] });
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const product = await this.productService.findOne({
+      where: { id },
+      relations: ['category'],
+    });
+    if (!product) {
+      throw new BadRequestException('Product not found');
+    }
+    return product;
   }
 
   @Post()
