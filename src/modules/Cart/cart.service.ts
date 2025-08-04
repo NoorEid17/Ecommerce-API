@@ -81,4 +81,19 @@ export class CartService {
     existingItem.quantity = quantity;
     return this.cartItemRepository.save(existingItem);
   }
+
+  async deleteCartItem(userId: string, productId: string) {
+    const cart = await this.getUserCart(userId);
+    if (!cart) {
+      throw new BadRequestException('Cart not found for user');
+    }
+    const existingItem = cart.cartItems.find(
+      (item) => item.productId === productId,
+    );
+    if (!existingItem) {
+      throw new BadRequestException('Item does not exist in the cart');
+    }
+    await this.cartItemRepository.remove(existingItem);
+    return existingItem;
+  }
 }

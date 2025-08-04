@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -44,5 +45,14 @@ export class CartController {
       productId,
       updateItemDto.quantity,
     );
+  }
+
+  @Delete('/items/:productId')
+  async deleteCartItem(
+    @UserId() userId: string,
+    @Param('productId', new ParseUUIDPipe()) productId: string,
+  ) {
+    await this.cartService.deleteCartItem(userId, productId);
+    return { message: 'Item removed from cart successfully' };
   }
 }
