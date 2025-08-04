@@ -20,6 +20,8 @@ export class UserService {
   }
 
   async findOneBy(options: FindOptionsWhere<User>) {
-    return this.userRepository.findOneBy(options);
+    const user = await this.userRepository.findOneBy(options);
+    delete user.password;
+    return user;
   }
 }
