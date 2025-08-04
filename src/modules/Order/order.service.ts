@@ -51,14 +51,14 @@ export class OrderService {
   getOrderById(orderId: string) {
     return this.orderRepository.findOne({
       where: { id: orderId },
-      relations: ['items', 'user'],
+      relations: ['items', 'user', 'items.product'],
     });
   }
 
   getUserOrders(userId: string) {
     return this.orderRepository.find({
       where: { userId },
-      relations: ['items', 'user', 'items.product'],
+      relations: ['items', 'user'],
       order: { orderDate: 'DESC' },
     });
   }

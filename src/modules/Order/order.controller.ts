@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
@@ -26,5 +28,19 @@ export class OrderController {
   @Get()
   async getUserOrders(@UserId() userId: string) {
     return this.orderService.getUserOrders(userId);
+  }
+
+  @Get(':id')
+  async getOrderById(
+    @UserId() userId: string,
+    @Param('id', new ParseUUIDPipe()) orderId: string,
+  ) {
+    const order = await this.orderService.getOrderById(orderId);
+    if (!order || order.userId !== userId) {
+      throw new BadRequestException(
+        'Order not found or does not belong to user',
+      );
+    }
+    return order;
   }
 }
