@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './product.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
@@ -10,8 +10,8 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-  async findAll() {
-    return this.productRepository.find();
+  async findAll(findOptions: FindManyOptions<Product> = {}) {
+    return this.productRepository.find(findOptions);
   }
 
   async create(productData: Partial<Product>) {

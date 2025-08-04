@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './category.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
@@ -15,8 +15,8 @@ export class CategoryService {
     return this.categoryRepository.save(newCategory);
   }
 
-  findAll() {
-    return this.categoryRepository.find();
+  findAll(findOptions: FindManyOptions<Category> = {}) {
+    return this.categoryRepository.find(findOptions);
   }
 
   findOneBy(options: FindOptionsWhere<Category>) {
