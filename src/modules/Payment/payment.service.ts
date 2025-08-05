@@ -17,6 +17,19 @@ export class PaymentService {
     private readonly configService: ConfigService,
   ) {}
 
+  async getPaymentById(id: string) {
+    const payment = await this.paymentRepository.findOneBy({ id });
+    if (!payment) throw new NotFoundException();
+    return payment;
+  }
+
+  async getUserPayments(userId: string) {
+    return this.paymentRepository.find({
+      where: { userId },
+      order: { paidAt: 'DESC' },
+    });
+  }
+
   async createPayment(paymentData: Partial<Payment>) {
     const payment = this.paymentRepository.create(paymentData);
     return this.paymentRepository.save(payment);
