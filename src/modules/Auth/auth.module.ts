@@ -28,5 +28,6 @@ import { AuthGuard } from './auth.guard';
       useClass: AuthGuard,
     },
   ],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
