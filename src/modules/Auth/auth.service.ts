@@ -46,6 +46,7 @@ export class AuthService {
     delete user.password;
     const tokenPayload = {
       sub: user.id,
+      role: user.role,
     };
     const accessToken = this.generateToken(tokenPayload);
     const refreshToken = this.generateToken(tokenPayload, {
@@ -73,6 +74,7 @@ export class AuthService {
     delete user.password;
     const tokenPayload = {
       sub: user.id,
+      role: user.role,
     };
     const accessToken = this.generateToken(tokenPayload);
     const refreshToken = this.generateToken(tokenPayload, {
